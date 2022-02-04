@@ -6,14 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import java.time.LocalDate;
+
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Getter
@@ -23,24 +24,15 @@ import java.time.LocalDate;
 @EqualsAndHashCode(of = "id")
 public class DeveloperProject {
 
-    public DeveloperProject(Developer developer, Project project, Role role, LocalDate created) {
-        this.id = new DeveloperProjectID(developer.getId(), project.getId());
-        this.developer = developer;
-        this.project = project;
-        this.role = role;
-        this.created = created;
-    }
-
-    @EmbeddedId
+    @Id
     private DeveloperProjectID id;
 
-    @ManyToOne
-    @MapsId("developer")
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "developer_id")
+
     private Developer developer;
 
-    @ManyToOne
-    @MapsId("project")
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "project_id")
     private Project project;
 
