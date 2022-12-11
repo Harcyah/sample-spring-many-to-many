@@ -11,6 +11,8 @@ import com.harcyah.sample.spring.many_to_many.domain.ProjectID;
 import com.harcyah.sample.spring.many_to_many.persistence.DeveloperProjectRepository;
 import com.harcyah.sample.spring.many_to_many.persistence.DeveloperRepository;
 import com.harcyah.sample.spring.many_to_many.persistence.ProjectRepository;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -23,8 +25,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.UUID;

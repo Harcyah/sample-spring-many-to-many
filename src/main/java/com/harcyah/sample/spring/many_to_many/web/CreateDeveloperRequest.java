@@ -1,11 +1,11 @@
 package com.harcyah.sample.spring.many_to_many.web;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Getter
