@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class SampleSpringManyToManyIntegrationTest {
+class SampleSpringManyToManyIntegrationTest {
 
     private static final UUID developerId0 = UUID.randomUUID();
     private static final UUID developerId1 = UUID.randomUUID();
@@ -37,7 +37,7 @@ public class SampleSpringManyToManyIntegrationTest {
     private TestRestTemplate restTemplate;
 
     @Test
-    public void testCreateAndDelete() {
+    void testCreateAndDelete() {
         DeveloperDTO[] developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
         assertThat(developers).hasSize(0);
         createDeveloper(developerId0, "Bob", "Morane");
