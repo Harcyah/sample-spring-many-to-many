@@ -60,7 +60,7 @@ public class AdminController {
     public List<DeveloperDTO> listDevelopers() {
         return developerRepository.findAll(Sort.by("firstName")).stream()
             .map(it -> new DeveloperDTO(it.getId(), it.getFirstName(), it.getLastName(), it.getProjects().stream().map(p -> p.getProject().getId()).collect(Collectors.toSet())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Transactional
@@ -84,7 +84,7 @@ public class AdminController {
     public List<ProjectDTO> listProjects() {
         return projectRepository.findAll(Sort.by("name")).stream()
             .map(it -> new ProjectDTO(it.getId(), it.getName(), it.getStart(), it.getDevelopers().stream().map(d -> d.getDeveloper().getId()).collect(Collectors.toSet())))
-            .collect(Collectors.toList());
+            .toList();
     }
 
     @Transactional
