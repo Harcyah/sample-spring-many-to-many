@@ -8,6 +8,7 @@ import com.harcyah.sample.spring.many_to_many.domain.Role;
 import com.harcyah.sample.spring.many_to_many.web.CreateDeveloperProjectRequest;
 import com.harcyah.sample.spring.many_to_many.web.CreateDeveloperRequest;
 import com.harcyah.sample.spring.many_to_many.web.CreateProjectRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,19 +37,22 @@ class SampleSpringManyToManyIntegrationTest {
     @Autowired
     private TestRestTemplate restTemplate;
 
-    @Test
-    void testCreateAndDelete() {
+    @BeforeEach
+    void setUpDevelopers() {
         DeveloperDTO[] developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
-        assertThat(developers).hasSize(0);
+        assertThat(developers).isEmpty();
         createDeveloper(developerId0, "Bob", "Morane");
         createDeveloper(developerId1, "Raph", "Zoobar");
         developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
         assertThat(developers).hasSize(2);
         assertThat(developers[0].getProjects()).isEmpty();
         assertThat(developers[1].getProjects()).isEmpty();
+    }
 
+    @BeforeEach
+    void setUpProjects() {
         ProjectDTO[] projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
-        assertThat(projects).hasSize(0);
+        assertThat(projects).isEmpty();
         createProject(projectId0, "Project1", LocalDate.of(2010, 10, 15));
         createProject(projectId1, "Project2", LocalDate.of(2011, 11, 15));
         createProject(projectId2, "Project3", LocalDate.of(2012, 12, 15));
@@ -57,19 +61,22 @@ class SampleSpringManyToManyIntegrationTest {
         assertThat(projects[0].getDevelopers()).isEmpty();
         assertThat(projects[1].getDevelopers()).isEmpty();
         assertThat(projects[1].getDevelopers()).isEmpty();
+    }
 
+    @Test
+    void testCreateAndDelete() {
         createDeveloperProject(developerId0, projectId0);
         createDeveloperProject(developerId0, projectId1);
         createDeveloperProject(developerId1, projectId0);
         createDeveloperProject(developerId1, projectId1);
         createDeveloperProject(developerId1, projectId2);
 
-        developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
+        DeveloperDTO[] developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
         assertThat(developers).hasSize(2);
         assertThat(developers[0].getProjects()).containsExactlyInAnyOrder(new ProjectID(projectId0), new ProjectID(projectId1));
         assertThat(developers[1].getProjects()).containsExactlyInAnyOrder(new ProjectID(projectId0), new ProjectID(projectId1), new ProjectID(projectId2));
 
-        projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
+        ProjectDTO[] projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
         assertThat(projects).hasSize(3);
         assertThat(projects[0].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId0), new DeveloperID(developerId1));
         assertThat(projects[1].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId0), new DeveloperID(developerId1));
