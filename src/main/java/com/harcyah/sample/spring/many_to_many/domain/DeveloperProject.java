@@ -29,7 +29,6 @@ public class DeveloperProject {
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "developer_id")
-
     private Developer developer;
 
     @ManyToOne(fetch = EAGER)

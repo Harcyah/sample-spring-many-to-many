@@ -10,11 +10,10 @@ import com.harcyah.sample.spring.many_to_many.web.CreateDeveloperRequest;
 import com.harcyah.sample.spring.many_to_many.web.CreateProjectRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -34,8 +33,7 @@ class SampleSpringManyToManyIntegrationTest {
     @LocalServerPort
     private int port;
 
-    @Autowired
-    private TestRestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @BeforeEach
     void setUpDevelopers() {
@@ -44,8 +42,12 @@ class SampleSpringManyToManyIntegrationTest {
         createDeveloper(developerId0, "Bob", "Morane");
         createDeveloper(developerId1, "Raph", "Zoobar");
         developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
-        assertThat(developers).hasSize(2);
+        assertThat(developers)
+            .isNotNull()
+            .hasSize(2);
+        assertThat(developers[0]).isNotNull();
         assertThat(developers[0].getProjects()).isEmpty();
+        assertThat(developers[1]).isNotNull();
         assertThat(developers[1].getProjects()).isEmpty();
     }
 
@@ -57,10 +59,15 @@ class SampleSpringManyToManyIntegrationTest {
         createProject(projectId1, "Project2", LocalDate.of(2011, 11, 15));
         createProject(projectId2, "Project3", LocalDate.of(2012, 12, 15));
         projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
-        assertThat(projects).hasSize(3);
-        assertThat(projects[0].getDevelopers()).isEmpty();
-        assertThat(projects[1].getDevelopers()).isEmpty();
-        assertThat(projects[1].getDevelopers()).isEmpty();
+        assertThat(projects)
+            .isNotNull()
+            .hasSize(3);
+        assertThat(projects[0]).isNotNull();
+        assertThat(projects[0].getDevelopers()).isNotNull().isEmpty();
+        assertThat(projects[1]).isNotNull();
+        assertThat(projects[1].getDevelopers()).isNotNull().isEmpty();
+        assertThat(projects[2]).isNotNull();
+        assertThat(projects[2].getDevelopers()).isNotNull().isEmpty();
     }
 
     @Test
@@ -72,12 +79,16 @@ class SampleSpringManyToManyIntegrationTest {
         createDeveloperProject(developerId1, projectId2);
 
         DeveloperDTO[] developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
-        assertThat(developers).hasSize(2);
+        assertThat(developers)
+            .isNotNull()
+            .hasSize(2);
         assertThat(developers[0].getProjects()).containsExactlyInAnyOrder(new ProjectID(projectId0), new ProjectID(projectId1));
         assertThat(developers[1].getProjects()).containsExactlyInAnyOrder(new ProjectID(projectId0), new ProjectID(projectId1), new ProjectID(projectId2));
 
         ProjectDTO[] projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
-        assertThat(projects).hasSize(3);
+        assertThat(projects)
+            .isNotNull()
+            .hasSize(3);
         assertThat(projects[0].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId0), new DeveloperID(developerId1));
         assertThat(projects[1].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId0), new DeveloperID(developerId1));
         assertThat(projects[2].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId1));
@@ -86,11 +97,15 @@ class SampleSpringManyToManyIntegrationTest {
         delete("/project", projectId0);
 
         developers = restTemplate.getForObject(url("/developers"), DeveloperDTO[].class);
-        assertThat(developers).hasSize(1);
+        assertThat(developers)
+            .isNotNull()
+            .hasSize(1);
         assertThat(developers[0].getProjects()).containsExactlyInAnyOrder(new ProjectID(projectId1), new ProjectID(projectId2));
 
         projects = restTemplate.getForObject(url("/projects"), ProjectDTO[].class);
-        assertThat(projects).hasSize(2);
+        assertThat(projects)
+            .isNotNull()
+            .hasSize(2);
         assertThat(projects[0].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId1));
         assertThat(projects[1].getDevelopers()).containsExactlyInAnyOrder(new DeveloperID(developerId1));
     }

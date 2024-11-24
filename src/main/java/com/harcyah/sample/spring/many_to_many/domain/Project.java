@@ -29,7 +29,7 @@ public class Project {
     private String name;
     private LocalDate start;
 
-    @OneToMany(mappedBy = "project", fetch = EAGER)
+    @OneToMany(mappedBy = "project", fetch = EAGER, orphanRemoval = true)
     private Set<DeveloperProject> developers = new HashSet<>();
 
 }

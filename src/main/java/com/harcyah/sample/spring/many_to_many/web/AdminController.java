@@ -11,12 +11,12 @@ import com.harcyah.sample.spring.many_to_many.domain.ProjectID;
 import com.harcyah.sample.spring.many_to_many.persistence.DeveloperProjectRepository;
 import com.harcyah.sample.spring.many_to_many.persistence.DeveloperRepository;
 import com.harcyah.sample.spring.many_to_many.persistence.ProjectRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,6 +56,7 @@ public class AdminController {
         log.info("Deleted developer [{}]", id.getValue());
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/developers")
     public List<DeveloperDTO> listDevelopers() {
         return developerRepository.findAll(Sort.by("firstName")).stream()
@@ -80,6 +81,7 @@ public class AdminController {
         log.info("Deleted project [{}]", id.getValue());
     }
 
+    @Transactional(readOnly = true)
     @GetMapping("/projects")
     public List<ProjectDTO> listProjects() {
         return projectRepository.findAll(Sort.by("name")).stream()

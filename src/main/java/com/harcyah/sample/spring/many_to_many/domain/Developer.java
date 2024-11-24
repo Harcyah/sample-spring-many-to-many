@@ -28,7 +28,7 @@ public class Developer {
     private String firstName;
     private String lastName;
 
-    @OneToMany(mappedBy = "developer", fetch = EAGER)
+    @OneToMany(mappedBy = "developer", fetch = EAGER, orphanRemoval = true)
     private Set<DeveloperProject> projects = new HashSet<>();
 
 }
