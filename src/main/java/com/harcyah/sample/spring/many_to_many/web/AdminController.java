@@ -51,7 +51,7 @@ public class AdminController {
     @Transactional
     @DeleteMapping("/developer/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteDeveloper(@PathVariable DeveloperID id) {
+    public void deleteDeveloper(@PathVariable("id") DeveloperID id) {
         developerRepository.deleteById(id);
         log.info("Deleted developer [{}]", id.getValue());
     }
@@ -76,7 +76,7 @@ public class AdminController {
     @Transactional
     @DeleteMapping("/project/{id}")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void deleteProject(@PathVariable ProjectID id) {
+    public void deleteProject(@PathVariable("id") ProjectID id) {
         projectRepository.deleteById(id);
         log.info("Deleted project [{}]", id.getValue());
     }
